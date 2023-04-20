@@ -1,11 +1,16 @@
 package ru.hoprik.storymod.Engine;
 
+import ru.hoprik.storymod.Engine.Dialoge.Dialog;
+import ru.hoprik.storymod.StoryMod;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 public class Executer {
     List<Action> callbacks = new ArrayList<>();
     boolean Run = true;
     int idAction = 0;
+    Thread thread;
     public Executer(){
     }
     public void add(Runnable func, int millisecond){
@@ -15,14 +20,11 @@ public class Executer {
         callbacks.add(new Action(func, second*1000));
     }
     public void Stop(){
-        Run = false;
-    }
-    public void Resume(){
-        Run = true;
+        this.Run = false;
     }
     public void Exec(){
-        new Thread(()->{
-            while (Run){
+        thread = new Thread(()-> {
+            while (Run) {
                 Action action = callbacks.get(idAction);
                 action.callback.run();
                 try {
@@ -31,12 +33,13 @@ public class Executer {
                     throw new RuntimeException(e);
                 }
                 idAction++;
-                if (idAction == callbacks.size()){
+                if (idAction == callbacks.size()) {
                     Run = false;
                     idAction = 0;
-                }
+                    }
             }
-        }).start();
+        });
+        thread.start();
     }
 }
 class Action{

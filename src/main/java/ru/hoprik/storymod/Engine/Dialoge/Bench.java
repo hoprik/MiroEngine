@@ -1,12 +1,19 @@
 package ru.hoprik.storymod.Engine.Dialoge;
 
 
-public class Bench {
-    public String playerSay;
-    Runnable function;
+import java.io.*;
 
-    public Bench(String playerSay, Runnable function){
+public class Bench implements Serializable {
+    public String playerSay;
+    public Dialog function;
+
+    public Bench(String playerSay, Dialog function){
         this.playerSay = playerSay;
         this.function = function;
     }
+
+    public Bench(String end){
+        this.playerSay = end;
+    }
+
 }

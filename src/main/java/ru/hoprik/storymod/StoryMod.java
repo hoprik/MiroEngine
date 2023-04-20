@@ -1,5 +1,6 @@
 package ru.hoprik.storymod;
 
+import net.minecraft.util.profiling.jfr.event.PacketReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -24,7 +25,6 @@ public class StoryMod
         MinecraftForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::CommonSetup);
     }
-
     private void CommonSetup(FMLCommonSetupEvent event){
         Network.register();
     }
