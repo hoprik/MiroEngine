@@ -5,31 +5,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.common.Mod;
 import ru.hoprik.storymod.Engine.Network.Network;
 import ru.hoprik.storymod.Engine.Network.Packets.SDialogPacket;
-import ru.hoprik.storymod.Engine.Utils.SerializableRunnable;
 import ru.hoprik.storymod.StoryMod;
 
 import java.beans.Transient;
 import java.io.*;
 
-@Mod.EventBusSubscriber(modid = StoryMod.MODID)
 public class Dialog implements Serializable{
     String heroSay;
     Bench[] benches;
-    public byte[] end;
+    transient String end = "her";
 
     public Dialog(String heroSay, Bench[] benches){
         this.heroSay = heroSay;
         this.benches = benches;
     }
-    public Dialog(int id, Runnable runnable){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-            objectOutputStream.writeObject(new SerializableRunnable(runnable));
-        } catch (IOException e) {
-            // Обработка исключения
-        }
+    public Dialog(int id){
         this.heroSay = "end."+id;
-        this.end = byteArrayOutputStream.toByteArray();
 
     }
 
@@ -41,8 +32,21 @@ public class Dialog implements Serializable{
         }
     }
 
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeUTF(end);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.end = in.readUTF();
+    }
+
     public void end() {
-
-
+        StoryMod.logger.info(this.end);
     }
 }

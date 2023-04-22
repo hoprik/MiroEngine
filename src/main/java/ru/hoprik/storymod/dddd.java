@@ -30,8 +30,8 @@ import java.util.Objects;
 @Mod.EventBusSubscriber(modid = StoryMod.MODID)
 public class dddd {
     static Player player;
-    static Dialog dialog = new Dialog("Привет я нечто то заспавнит моба. Хочешь?", new Bench[]{new Bench("Да", new Dialog(1, ()-> StoryMod.logger.info(1))),
-            new Bench("Нет", new Dialog(2, ()-> StoryMod.logger.info(2)))} );
+    static Dialog dialog = new Dialog("Привет я нечто то заспавнит моба. Хочешь?", new Bench[]{new Bench("Да", new Dialog(1)),
+            new Bench("Нет", new Dialog(2))} );
 
 
     @SubscribeEvent
@@ -46,10 +46,11 @@ public class dddd {
         }, 1);
         executer.addS(() -> {
             dialog.show(event.getPlayer());
-        }, 1);
+        }, 5);
         executer.addS(() -> {
+            dialog.end();
             StoryFunction.Message(event.getPlayer(), "yyuyuyi", "fggggfgf");
-        }, 1);
+        }, 5);
         executer.Exec();
     }
 }

@@ -38,15 +38,8 @@ public class SEndDialogPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            Dialog dialog = (Dialog) Network.toObj(instance);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(dialog.end);
-            try (ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
-               SerializableRunnable serializableRunnable = (SerializableRunnable) objectInputStream.readObject();
-               serializableRunnable.run();
-            } catch (IOException | ClassNotFoundException e) {
-                StoryMod.logger.info(e);
-                // Обработка исключения
-            }
+            Dialog dialog = SerializationUtils.deserialize(this.instance);
+            dialog.setEnd(end);
         });
         return true;
     }
