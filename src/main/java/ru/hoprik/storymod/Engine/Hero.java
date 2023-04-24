@@ -5,8 +5,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
+import ru.hoprik.storymod.StoryMod;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class Hero {
@@ -21,11 +27,17 @@ public class Hero {
 
 
     public void stopMoveEntity(){
-        this.entity.getNavigation().stop();
+        List<Goal> goals = new ArrayList<>();
+        for (WrappedGoal availableGoal : entity.goalSelector.getAvailableGoals()) {
+            if (availableGoal.getGoal().toString().equals("MovePlayerEntity")){
+                entity.goalSelector.removeGoal(availableGoal.getGoal());
+            }
+        }
+
     }
 
     public void moveEntity(Vector3d vector3d, int speed){
-            entity.goalSelector.addGoal(0, new MovePlayerEntity(entity, vector3d, speed));
+        entity.goalSelector.addGoal(1, new MovePlayerEntity(entity, vector3d, speed));
     }
 
 

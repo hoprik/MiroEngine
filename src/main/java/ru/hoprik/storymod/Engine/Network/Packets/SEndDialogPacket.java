@@ -17,7 +17,6 @@ import java.io.*;
 import java.util.function.Supplier;
 
 public class SEndDialogPacket {
-    transient Runnable runnable;
     private final String end;
     private final byte[] instance;
     public SEndDialogPacket(String end, byte[] instance) {
@@ -38,11 +37,11 @@ public class SEndDialogPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            Dialog dialog = SerializationUtils.deserialize(this.instance);
-            dialog.setEnd(end);
+            Dialog dialog = (Dialog) Network.toObj(this.instance);
+            StoryMod.logger.info(dialog);
+            SerializableRunnable runnable = (SerializableRunnable) Network.toObj(dialog.runnable);
+            runnable.run();
         });
         return true;
     }
-
-
 }

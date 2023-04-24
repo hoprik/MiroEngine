@@ -19,11 +19,13 @@ public class DialogGui extends Screen {
     Bench[] benches;
     List<Button> buttons = new ArrayList<>();
     int y = 72;
+    //byte[] instance;
 
     public DialogGui(String heroSay, Bench[] benches) {
         super(Component.literal("dialog"));
         this.heroSay = heroSay;
         this.benches = benches;
+        //this.instance = instance;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class DialogGui extends Screen {
                  if (Objects.equals(strings[0], "end")){
                      this.minecraft.setScreen(null);
                      StoryMod.logger.info(bench.function.heroSay);
-                     Network.sendToServer(new SEndDialogPacket(strings[1], Network.toByte(bench.function)));
+                     Network.sendToServer(new SEndDialogPacket(strings[1], bench.function.instance));
                  }
                  else {
                     this.minecraft.setScreen(new DialogGui(bench.function.heroSay, bench.function.benches));

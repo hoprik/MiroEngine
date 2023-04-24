@@ -15,18 +15,22 @@ import java.util.function.Supplier;
 public class SDialogPacket  {
     private final String heroSay;
     private final byte[] benches;
+//    private final byte[] instance;
     public SDialogPacket(String heroSay, byte[] bench) {
         this.heroSay = heroSay;
         this.benches = bench;
+//        this.instance = instance;
     }
     public SDialogPacket(FriendlyByteBuf buf) {
         this.heroSay = buf.readUtf();
         this.benches = buf.readByteArray();
+        //this.instance = buf.readByteArray();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(heroSay);
         buf.writeByteArray(benches);
+//        buf.writeByteArray(instance);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {

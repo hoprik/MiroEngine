@@ -1,56 +1,61 @@
 package ru.hoprik.storymod;
 
+
 import com.mojang.math.Vector3d;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.ChatMessageContent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.profiling.jfr.event.PacketReceivedEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.apache.logging.log4j.core.Logger;
-import org.stringtemplate.v4.ST;
 import ru.hoprik.storymod.Engine.Dialoge.Bench;
 import ru.hoprik.storymod.Engine.Dialoge.Dialog;
 import ru.hoprik.storymod.Engine.Executer;
 import ru.hoprik.storymod.Engine.Hero;
 import ru.hoprik.storymod.Engine.StoryFunction;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 
 @Mod.EventBusSubscriber(modid = StoryMod.MODID)
 public class dddd {
     static Player player;
-    static Dialog dialog = new Dialog("Привет я нечто то заспавнит моба. Хочешь?", new Bench[]{new Bench("Да", new Dialog(1)),
-            new Bench("Нет", new Dialog(2))} );
+    static Dialog dialog = new Dialog("Привет я нечто то заспавнит моба. Хочешь?", new Bench[]{
+            new Bench("Да",
+                    new Dialog(1, (Serializable & Runnable) ()->{
+                        yes();
+                    })),
+            new Bench("Нет",
+                    new Dialog(2, (Serializable & Runnable) () -> {StoryMod.logger.info("it`s working 2");}))});
 
 
     @SubscribeEvent
     public static void te(BlockEvent.BreakEvent event) {
-        StoryFunction.Message(event.getPlayer(), "gg", "ddd");
         Executer executer = new Executer();
         executer.addS(() -> {
             player = event.getPlayer();
         }, 1);
         executer.addS(() -> {
-            StoryFunction.Message(event.getPlayer(), "fgfgf", "thyhyuj");
+            StoryFunction.Message(event.getPlayer(), "бен", "1234");
         }, 1);
         executer.addS(() -> {
             dialog.show(event.getPlayer());
         }, 5);
-        executer.addS(() -> {
-            dialog.end();
-            StoryFunction.Message(event.getPlayer(), "yyuyuyi", "fggggfgf");
+        executer.Exec();
+    }
+
+    public static void yes(){
+        Executer executer = new Executer();
+        Hero hero = new Hero(new Sheep(EntityType.SHEEP, player.level), new BlockPos(0,-60, 0));;
+        executer.addS(()->{
+            hero.moveEntity(new Vector3d(8,-60, 8), 10);
+        }, 5);
+        executer.addS(()->{
+            hero.stopMoveEntity();
         }, 5);
         executer.Exec();
+
     }
 }

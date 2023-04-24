@@ -69,9 +69,8 @@ public class Network{
             ois = new ObjectInputStream(bis);
             Object object = ois.readObject();
             return object;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
+            StoryMod.logger.info(e);
             throw new RuntimeException(e);
         }
     }
