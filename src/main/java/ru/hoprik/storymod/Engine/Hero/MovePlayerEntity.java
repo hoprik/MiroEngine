@@ -1,4 +1,4 @@
-package ru.hoprik.storymod.Engine;
+package ru.hoprik.storymod.Engine.Hero;
 
 import com.mojang.math.Vector3d;
 import net.minecraft.core.BlockPos;

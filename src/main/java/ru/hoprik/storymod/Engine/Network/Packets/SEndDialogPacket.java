@@ -1,14 +1,8 @@
 package ru.hoprik.storymod.Engine.Network.Packets;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
-import org.apache.commons.lang3.SerializationUtils;
-import ru.hoprik.storymod.Engine.Dialoge.Bench;
 import ru.hoprik.storymod.Engine.Dialoge.Dialog;
-import ru.hoprik.storymod.Engine.Dialoge.DialogGui;
 import ru.hoprik.storymod.Engine.Network.Network;
 import ru.hoprik.storymod.Engine.Utils.SerializableRunnable;
 import ru.hoprik.storymod.StoryMod;

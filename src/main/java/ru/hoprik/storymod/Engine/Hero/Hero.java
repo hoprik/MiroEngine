@@ -1,19 +1,15 @@
-package ru.hoprik.storymod.Engine;
+package ru.hoprik.storymod.Engine.Hero;
 
 import com.mojang.math.Vector3d;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
-import ru.hoprik.storymod.StoryMod;
+import ru.hoprik.storymod.Engine.StoryFunction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Hero {
     public Mob entity;

@@ -12,11 +12,11 @@ import net.minecraftforge.fml.common.Mod;
 import ru.hoprik.storymod.Engine.Dialoge.Bench;
 import ru.hoprik.storymod.Engine.Dialoge.Dialog;
 import ru.hoprik.storymod.Engine.Executer;
-import ru.hoprik.storymod.Engine.Hero;
+import ru.hoprik.storymod.Engine.Hero.Hero;
 import ru.hoprik.storymod.Engine.StoryFunction;
+import ru.hoprik.storymod.Engine.Utils.BuilderBuildings;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 
 @Mod.EventBusSubscriber(modid = StoryMod.MODID)
@@ -34,6 +34,7 @@ public class dddd {
     @SubscribeEvent
     public static void te(BlockEvent.BreakEvent event) {
         Executer executer = new Executer();
+        BuilderBuildings builderBuildings = new BuilderBuildings(event.getPlayer().level, new BlockPos(8, -58, 8));
         executer.addS(() -> {
             player = event.getPlayer();
         }, 1);
