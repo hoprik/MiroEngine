@@ -1,19 +1,27 @@
-# pip install NBT
-
 from nbt import nbt
 
-nbtfile = nbt.NBTFile("ne.nbt", 'rb')
+nbtfile = nbt.NBTFile("home.nbt", 'rb')
 
 blockPosClass = []
 paletteBlockClass = []
 
 for palette in nbtfile["palette"]:
     paletteName = str(palette["Name"])
+    propertiesString = ""
+    try:
+        properties = palette["Properties"]
+        for property in properties.items():
+            key = str(property[0]).upper()
+            value = str(property[1]).upper()
+            propertiesString += ".setValue({}, {})".format(key, value)
+    except:
+        pass
+
+
     paletteNameId = paletteName.split(":")
     paletteBlock = 'blockStates.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation("{}", ' \
-                   '"{}")).defaultBlockState());'.format(paletteNameId[0], paletteNameId[1])
+                   '"{}")).defaultBlockState(){});'.format(paletteNameId[0], paletteNameId[1], propertiesString)
     paletteBlockClass.append(paletteBlock)
-
 
 for block in nbtfile["blocks"]:
     blockPos = block["pos"]
@@ -21,7 +29,6 @@ for block in nbtfile["blocks"]:
     classPos = "level.setBlockAndUpdate(new BlockPos(pos.getX()+{}, pos.getY()+{}, pos.getZ()+{}), blockStates.get({}));".format(
         str(blockPos[0]), str(blockPos[1]), str(blockPos[2]), str(state))
     blockPosClass.append(classPos)
-
 
 classBuilder = '''
 public class BuilderBuildings {
@@ -41,7 +48,7 @@ public class BuilderBuildings {
 '''
 
 for paletteBlock in paletteBlockClass:
-    classBuilder += "\t\t"+paletteBlock+"\n"
+    classBuilder += "\t\t" + paletteBlock + "\n"
 
 classBuilder += '''
         return blockStates;
