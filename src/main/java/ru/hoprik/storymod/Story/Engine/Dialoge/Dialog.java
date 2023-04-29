@@ -1,5 +1,6 @@
 package ru.hoprik.storymod.Story.Engine.Dialoge;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import ru.hoprik.storymod.Story.Engine.Network.Network;
@@ -29,10 +30,16 @@ public class Dialog implements Serializable{
 
 
     public void show(Player entity) {
-        for (ServerPlayer player : entity.getServer().getPlayerList().getPlayers()) {
-            if (entity instanceof ServerPlayer) {
-                Network.sendToPlayer(new SDialogPacket(heroSay, Network.toByte(benches)), (ServerPlayer) entity);
+        if (!entity.level.isClientSide) {
+            for (ServerPlayer player : entity.getServer().getPlayerList().getPlayers()) {
+                if (entity instanceof ServerPlayer) {
+                    Network.sendToPlayer(new SDialogPacket(heroSay, Network.toByte(benches)), player);
+                }
             }
+        }
+        else {
+            Minecraft minecraft = Minecraft.getInstance();
+            minecraft.setScreen(new DialogGui(heroSay, benches));
         }
     }
 

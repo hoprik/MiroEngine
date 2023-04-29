@@ -31,7 +31,7 @@ public class SPlayerMessagePacket {
         context.enqueueWork(() -> {
             ServerPlayer playerAll = context.getSender();
             for (Player player: playerAll.getServer().getPlayerList().getPlayers()) {
-                player.sendSystemMessage(Component.literal(ChatFormatting.DARK_GREEN +"["+hero+"]"+ChatFormatting.RESET+" "+text));
+                player.sendSystemMessage(Component.literal(ChatFormatting.DARK_PURPLE +"["+hero+"]"+ChatFormatting.RESET+" "+text));
             }
         });
         return true;

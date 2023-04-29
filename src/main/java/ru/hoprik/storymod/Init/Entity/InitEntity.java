@@ -20,6 +20,12 @@ public class InitEntity {
                             .sized(0.4f, 2f)
                             .build(new ResourceLocation(StoryMod.MODID, "hoprik").toString()));
 
+    public static final RegistryObject<EntityType<NpcEntity>> YBLEDOK =
+            ENTITY_TYPES.register("ybl",
+                    () -> EntityType.Builder.of(NpcEntity::new, MobCategory.CREATURE)
+                            .sized(0.4f, 2f)
+                            .build(new ResourceLocation(StoryMod.MODID, "ybl").toString()));
+
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
     }

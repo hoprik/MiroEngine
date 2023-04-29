@@ -10,6 +10,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import ru.hoprik.storymod.Init.Entity.Entity.NpcEntity;
 import ru.hoprik.storymod.Story.Engine.Config.StorySaveDataConfigBuilder;
 import ru.hoprik.storymod.Story.Engine.Executer;
 import ru.hoprik.storymod.Story.Engine.Network.Network;
@@ -55,4 +56,6 @@ public class ScriptOne {
         }
 
     }
+
+
 }

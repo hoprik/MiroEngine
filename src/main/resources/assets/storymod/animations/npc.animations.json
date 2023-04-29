@@ -174,7 +174,7 @@
 						"vector": [-90, 0, 0]
 					},
 					"position": {
-						"vector": [-16, -5, 0]
+						"vector": [-16, 10, -10]
 					}
 				}
 			}
@@ -224,6 +224,36 @@
 					}
 				}
 			}
+		},
+		"story.npc.yes": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"Head": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-22.5, 0, 0],
+							"easing": "easeInQuad"
+						},
+						"0.5": {
+							"vector": [0, 0, 0],
+							"easing": "easeInQuad"
+						},
+						"0.75": {
+							"vector": [-22.5, 0, 0],
+							"easing": "easeInQuart"
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInCubic"
+						}
+					}
+				}
+			}
 		}
-	}
+	},
+	"geckolib_format_version": 2
 }

@@ -1,5 +1,9 @@
 package ru.hoprik.storymod.Init.Entity.Entity;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -10,11 +14,13 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import ru.hoprik.storymod.Story.Engine.Executer;
+import ru.hoprik.storymod.StoryMod;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -28,12 +34,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NpcEntity extends Animal implements IAnimatable {
-
+    private static final EntityDataAccessor<Boolean> SLEEP =
+            SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> MOVE =
+            SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.BOOLEAN);
     private AnimationFactory factory = GeckoLibUtil.createFactory(this);
     public NpcEntity(EntityType<? extends Animal> p_27557_, Level p_27558_) {
         super(p_27557_, p_27558_);
     }
 
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
+        super.registerGoals();
+    }
 
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
@@ -52,16 +66,13 @@ public class NpcEntity extends Animal implements IAnimatable {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("story.npc.walking" ));
             return PlayState.CONTINUE;
-        }
 
-        if (this.dead) {
-            this.dead = false;
-            this.setHealth(1);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("story.npc.death" ));
+        }
+        if (this.isSleep()) {
+            event.getController().setAnimation(new AnimationBuilder()
+                    .addAnimation("story.npc.sleep"));
             return PlayState.CONTINUE;
         }
-
-
 
         event.getController().setAnimation(new AnimationBuilder().addAnimation("story.npc.iding"));
         return PlayState.CONTINUE;
@@ -91,5 +102,40 @@ public class NpcEntity extends Animal implements IAnimatable {
         return SoundEvents.PLAYER_DEATH;
     }
 
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        setSleep(tag.getBoolean("isSitting"));
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("isSitting", this.isSleep());
+        tag.putBoolean("isMoving", this.isSleep());
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SLEEP, false);
+        this.entityData.define(MOVE, false);
+    }
+
+    public void setSleep(boolean sitting) {
+        this.entityData.set(SLEEP, sitting);
+    }
+
+    public boolean isSleep() {
+        return this.entityData.get(SLEEP);
+    }
+
+    public void setMove(boolean sitting) {
+        this.entityData.set(MOVE, sitting);
+    }
+
+    public boolean isMove() {
+        return this.entityData.get(SLEEP);
+    }
 
 }

@@ -1,4 +1,4 @@
-package ru.hoprik.storymod.Init.Entity.Client;
+package ru.hoprik.storymod.Init.Entity.Client.ybleduk;
 
 import net.minecraft.resources.ResourceLocation;
 import ru.hoprik.storymod.Init.Entity.Entity.NpcEntity;
@@ -13,7 +13,7 @@ public class NpcModel extends AnimatedGeoModel<NpcEntity> {
 
     @Override
     public ResourceLocation getTextureResource(NpcEntity object) {
-        return new ResourceLocation(StoryMod.MODID, "textures/entity/player.png");
+        return new ResourceLocation(StoryMod.MODID, "textures/entity/ybledok.png");
     }
 
     @Override
