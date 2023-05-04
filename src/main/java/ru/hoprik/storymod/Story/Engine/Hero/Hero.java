@@ -33,10 +33,13 @@ public class Hero {
     }
 
     public void ShowAnim(String show){
-        if (Objects.equals(show, "test")){
-            NpcEntity npc = (NpcEntity) entity;
-            npc.setSleep(true);
-        }
+        NpcEntity npc = (NpcEntity) entity;
+        npc.setAnimation(show);
+    }
+
+    public void ShowEmote(String emote){
+        NpcEntity npc = (NpcEntity) entity;
+        npc.setEmote(emote);
     }
 
     public void moveEntity(Vector3d vector3d, float speed){

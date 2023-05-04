@@ -1,5 +1,13 @@
 package ru.hoprik.storymod.Story.Engine;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import ru.hoprik.storymod.Story.Engine.Utils.SerializableRunnable;
+import ru.hoprik.storymod.StoryMod;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 public class Executer {
@@ -13,7 +21,6 @@ public class Executer {
     public void addNullTaskS(int second){
         callbacks.add(new Action(null, second*1000));
     }
-
     public void addNullTask(int millisecond){
         callbacks.add(new Action(null, millisecond));
     }
@@ -22,6 +29,9 @@ public class Executer {
     }
     public void addS(Runnable func, int second){
         callbacks.add(new Action(func, second*1000));
+    }
+    public void addWait(Runnable func){
+        callbacks.add(new Action(func, 123321123));
     }
     public void stop(){
         this.Run = false;
@@ -42,7 +52,7 @@ public class Executer {
                 if (idAction == callbacks.size()) {
                     Run = false;
                     idAction = 0;
-                    }
+                }
             }
         });
         thread.start();

@@ -34,10 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NpcEntity extends Animal implements IAnimatable {
-    private static final EntityDataAccessor<Boolean> SLEEP =
-            SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> MOVE =
-            SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<String> ANIMATION =
+            SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.STRING);
+
+    private static final EntityDataAccessor<String> EMOTE =
+            SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.STRING);
     private AnimationFactory factory = GeckoLibUtil.createFactory(this);
     public NpcEntity(EntityType<? extends Animal> p_27557_, Level p_27558_) {
         super(p_27557_, p_27558_);
@@ -68,20 +69,28 @@ public class NpcEntity extends Animal implements IAnimatable {
             return PlayState.CONTINUE;
 
         }
-        if (this.isSleep()) {
-            event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("story.npc.sleep"));
-            return PlayState.CONTINUE;
-        }
+//        if (this.isSleeping()) {
+//            event.getController().setAnimation(new AnimationBuilder()
+//                    .addAnimation("story.npc.sleep"));
+//            return PlayState.CONTINUE;
+//        }
 
         event.getController().setAnimation(new AnimationBuilder().addAnimation("story.npc.iding"));
         return PlayState.CONTINUE;
     }
 
+    private <E extends IAnimatable> PlayState emote(AnimationEvent<E> event) {
+        event.getController().setAnimation(new AnimationBuilder()
+                .addAnimation("story.npc.sleep"));
+        return PlayState.CONTINUE;
+    }
+
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
+        data.addAnimationController(new AnimationController(this, "controllerMove",
                 0, this::predicate));
+        data.addAnimationController(new AnimationController(this, "controllerEmote",
+                0, this::emote));
     }
 
     @Override
@@ -105,37 +114,39 @@ public class NpcEntity extends Animal implements IAnimatable {
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        setSleep(tag.getBoolean("isSitting"));
+        setAnimation(tag.getString("animation"));
+        setAnimation(tag.getString("emote"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putBoolean("isSitting", this.isSleep());
-        tag.putBoolean("isMoving", this.isSleep());
+        tag.putString("animation", this.getAnimation());
+        tag.putString("emote", this.getEmote());
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SLEEP, false);
-        this.entityData.define(MOVE, false);
+        this.entityData.define(ANIMATION, "");
+        this.entityData.define(EMOTE, "");
     }
 
-    public void setSleep(boolean sitting) {
-        this.entityData.set(SLEEP, sitting);
+    public void setAnimation(String animations) {
+        this.entityData.set(ANIMATION, animations);
     }
 
-    public boolean isSleep() {
-        return this.entityData.get(SLEEP);
+    public String getAnimation() {
+        return this.entityData.get(ANIMATION);
     }
 
-    public void setMove(boolean sitting) {
-        this.entityData.set(MOVE, sitting);
+    public void setEmote(String emote) {
+        this.entityData.set(EMOTE, emote);
     }
 
-    public boolean isMove() {
-        return this.entityData.get(SLEEP);
+    public String getEmote() {
+        return this.entityData.get(ANIMATION);
     }
+
 
 }

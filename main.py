@@ -1,6 +1,6 @@
 from nbt import nbt
 
-nbtfile = nbt.NBTFile("home.nbt", 'rb')
+nbtfile = nbt.NBTFile("digitalabs.nbt", 'rb')
 
 blockPosClass = []
 paletteBlockClass = []
@@ -65,3 +65,5 @@ classBuilder += '''
 '''
 
 print(classBuilder)
+
+input("Нажмите enter чтобы закончить")

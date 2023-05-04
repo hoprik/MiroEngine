@@ -1,6 +1,8 @@
 package ru.hoprik.storymod.Story.Engine;
 
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -8,6 +10,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import ru.hoprik.storymod.Init.Entity.Client.npc.NpcRender;
 import ru.hoprik.storymod.Init.Entity.Entity.NpcEntity;
 import ru.hoprik.storymod.Init.Entity.InitEntity;
+import ru.hoprik.storymod.Story.Engine.Utils.KeyBind;
 
 import static ru.hoprik.storymod.StoryMod.MODID;
 
@@ -16,7 +19,7 @@ public class EventHandler {
 
 }
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 class ClientModEvents {
 
     @SubscribeEvent
@@ -29,5 +32,10 @@ class ClientModEvents {
 
         EntityRenderers.register(InitEntity.HOPRIK.get(), NpcRender::new);
         EntityRenderers.register(InitEntity.YBLEDOK.get(), ru.hoprik.storymod.Init.Entity.Client.ybleduk.NpcRender::new);
+    }
+
+    @SubscribeEvent
+    public static void onKeyRegister(RegisterKeyMappingsEvent event) {
+        event.register(KeyBind.NPC_DIALOG);
     }
 }
