@@ -64,10 +64,10 @@ public class NpcEntity extends Animal implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("story.npc.walking" ));
+        if (this.getAnimation() != "") {
+            event.getController().setAnimation(new AnimationBuilder()
+                    .addAnimation(this.getAnimation()));
             return PlayState.CONTINUE;
-
         }
 //        if (this.isSleeping()) {
 //            event.getController().setAnimation(new AnimationBuilder()
@@ -81,7 +81,7 @@ public class NpcEntity extends Animal implements IAnimatable {
 
     private <E extends IAnimatable> PlayState emote(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder()
-                .addAnimation("story.npc.sleep"));
+                .addAnimation(this.getEmote()));
         return PlayState.CONTINUE;
     }
 
