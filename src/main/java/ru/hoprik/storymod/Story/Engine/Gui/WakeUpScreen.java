@@ -18,7 +18,7 @@ public class WakeUpScreen extends Screen {
 
     @Override
     protected void init() {
-        button = this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4+100 , 150, 20, Component.literal("Встать c кровати"), (p_213021_1_) -> {
+        button = this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4+100 , 150, 20, Component.literal("Начать сюжет"), (p_213021_1_) -> {
             isAlpha = true;
         }));
         button.visible = false;

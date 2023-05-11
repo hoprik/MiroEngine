@@ -32,12 +32,12 @@ public class Hero {
         }
     }
 
-    public void ShowAnim(String show){
+    public void setAnim(String show){
         NpcEntity npc = (NpcEntity) entity;
         npc.setAnimation(show);
     }
 
-    public void ShowEmote(String emote){
+    public void setEmote(String emote){
         NpcEntity npc = (NpcEntity) entity;
         npc.setEmote(emote);
     }

@@ -26,12 +26,14 @@ class ClientModEvents {
     public static void RegisterAttributes(EntityAttributeCreationEvent event){
         event.put(InitEntity.HOPRIK.get(), NpcEntity.setAttributes());
         event.put(InitEntity.YBLEDOK.get(), NpcEntity.setAttributes());
+        event.put(InitEntity.PASSAGER1.get(), NpcEntity.setAttributes());
     }
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
 
         EntityRenderers.register(InitEntity.HOPRIK.get(), NpcRender::new);
         EntityRenderers.register(InitEntity.YBLEDOK.get(), ru.hoprik.storymod.Init.Entity.Client.ybleduk.NpcRender::new);
+        EntityRenderers.register(InitEntity.PASSAGER1.get(), ru.hoprik.storymod.Init.Entity.Client.passgers.NpcRender::new);
     }
 
     @SubscribeEvent

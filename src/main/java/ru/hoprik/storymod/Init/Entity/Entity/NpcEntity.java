@@ -69,13 +69,8 @@ public class NpcEntity extends Animal implements IAnimatable {
                     .addAnimation(this.getAnimation()));
             return PlayState.CONTINUE;
         }
-//        if (this.isSleeping()) {
-//            event.getController().setAnimation(new AnimationBuilder()
-//                    .addAnimation("story.npc.sleep"));
-//            return PlayState.CONTINUE;
-//        }
 
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("story.npc.iding"));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("story.npc.idle"));
         return PlayState.CONTINUE;
     }
 
