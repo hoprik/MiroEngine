@@ -28,12 +28,12 @@ public class MovePlayerEntity extends Goal {
     protected double posY;
     protected double posZ;
 
-    public MovePlayerEntity(Mob creature,Vector3d vector3d, double speedIn) {
+    public MovePlayerEntity(Mob creature,BlockPos blockPos, double speedIn) {
         mob = (PathfinderMob) creature;
         speedModifier = speedIn;
-        posX = vector3d.x;
-        posY = vector3d.y;
-        posZ = vector3d.z;
+        posX = blockPos.getX();
+        posY = blockPos.getY();
+        posZ = blockPos.getZ();
     }
 
     public boolean canUse() {
@@ -58,13 +58,5 @@ public class MovePlayerEntity extends Goal {
             }
         }
         return !this.mob.getNavigation().isDone();
-    }
-
-    @Nullable
-    protected BlockPos lookForWater(BlockGetter p_198173_, Entity p_198174_, int p_198175_) {
-        BlockPos blockpos = p_198174_.blockPosition();
-        return !p_198173_.getBlockState(blockpos).getCollisionShape(p_198173_, blockpos).isEmpty() ? null : BlockPos.findClosestMatch(p_198174_.blockPosition(), p_198175_, 1, (p_196649_) -> {
-            return p_198173_.getFluidState(p_196649_).is(FluidTags.WATER);
-        }).orElse((BlockPos)null);
     }
 }

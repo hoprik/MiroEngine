@@ -1,0 +1,14 @@
+package ru.hoprik.storymod.Story.Engine.AnimationRender.Timecore.api.registry.util;
+
+import net.minecraftforge.fml.event.IModBusEvent;
+import ru.hoprik.storymod.Story.Engine.AnimationRender.Timecore.api.registry.TimeRegister;
+
+import java.util.List;
+
+/**
+ * All {@link IModBusEvent} events, to which {@link TimeRegister}s are subscribed,
+ * will be loaded after the same events in TimeRegisters from {@link #getDependencies()}.
+ */
+public interface IOrderedRegister {
+    List<Class<? extends TimeRegister>> getDependencies();
+}

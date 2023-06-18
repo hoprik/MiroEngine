@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ru.hoprik.storymod.Story.Engine.Mixins",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "RenderHudMixin",
+    "ChatComponentMixin",
+    "ChatComponentMixin2",
+    "ChatListenerMixin",
+    "CommandSuggestionSuggestionsListMixin",
+    "GuiMessageLineMixin",
+    "GuiMessageMixin",
+    "HttpTextureMixin",
+    "MinecraftMixin",
+    "SkinManagerMixin",
+    "ClientModLoaderAccessor",
+    "MaterialDefinitionAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

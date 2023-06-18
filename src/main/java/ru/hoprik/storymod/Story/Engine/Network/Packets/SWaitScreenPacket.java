@@ -23,7 +23,6 @@ public class SWaitScreenPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            StoryMod.logger.info("hh");
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.setScreen(new Transparent(time));
         });

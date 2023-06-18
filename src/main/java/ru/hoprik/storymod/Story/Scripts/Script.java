@@ -1,58 +1,49 @@
 package ru.hoprik.storymod.Story.Scripts;
 
-import com.mojang.math.Vector3d;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import ru.hoprik.storymod.Init.Entity.Entity.NpcEntity;
-import ru.hoprik.storymod.Init.Entity.Entity.SeatEntity;
-import ru.hoprik.storymod.Init.Entity.InitEntity;
-import ru.hoprik.storymod.Story.Engine.Executer;
-import ru.hoprik.storymod.Story.Engine.ExecuterButton;
-import ru.hoprik.storymod.Story.Engine.Gui.WakeUpScreen;
-import ru.hoprik.storymod.Story.Engine.Hero.Hero;
-import ru.hoprik.storymod.Story.Engine.Network.Network;
-import ru.hoprik.storymod.Story.Engine.Network.Packets.SWakeUpPacket;
+import ru.hoprik.storymod.Story.Engine.AnimationRender.Gecolib3.resource.GeckoLibCache;
+import ru.hoprik.storymod.Story.Engine.CutsceneManager;
+import ru.hoprik.storymod.Story.Engine.Executer.Executer;
 import ru.hoprik.storymod.Story.Engine.StoryFunction;
 import ru.hoprik.storymod.StoryMod;
 
 @Mod.EventBusSubscriber(modid = StoryMod.MODID)
 public class Script {
-    static Executer station = new Executer();
-
-
     @SubscribeEvent
-    public static void ScriptCall(EntityJoinLevelEvent event){
-        if (!event.getLevel().isClientSide && event.getEntity() instanceof Player){
-            Hero ps1 = new Hero(new NpcEntity(InitEntity.PASSAGER1.get(), event.getLevel()), new BlockPos(event.getEntity().getX()+2, event.getEntity().getY(), event.getEntity().getZ()+2));
-            Hero ps2 = new Hero(new NpcEntity(InitEntity.PASSAGER1.get(), event.getLevel()), new BlockPos(event.getEntity().getX()-2, event.getEntity().getY(), event.getEntity().getZ()+2));
-            Hero ps3 = new Hero(new NpcEntity(InitEntity.PASSAGER1.get(), event.getLevel()), new BlockPos(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ()+2));
+    public static void ScriptCall(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof Player && !event.getLevel().isClientSide) {
+            CutsceneManager cutsceneManager = new CutsceneManager();
+            Executer button = new Executer();
+            button.addB(() -> {StoryFunction.Message((Player) event.getEntity(), "her", "hhh"); cutsceneManager.show((Player) event.getEntity()); cutsceneManager.moveCamera(new BlockPos(0,-52,0), 5);});
+            button.addB(() -> cutsceneManager.moveCamera(new BlockPos(10,-55,3), 2));
+            button.addB(() -> cutsceneManager.exitCutscene((Player) event.getEntity()));
+            button.addS(()-> GeckoLibCache.getInstance().getGeoModels().forEach((resourceLocation, geoModel) ->
+                    StoryFunction.Message((Player) event.getEntity(), "test", resourceLocation.getNamespace()+":"+resourceLocation.getPath()+":"+geoModel.toString()+" her mod")), 5);
+            button.addNullTaskS(2);
+            button.addS(()-> StoryFunction.Message((Player) event.getEntity(), "her", "hhh"), 5);
+            button.addB(() -> {StoryFunction.Message((Player) event.getEntity(), "her", "hhh"); cutsceneManager.show((Player) event.getEntity()); cutsceneManager.moveCamera(new BlockPos(0,-52,0), 5);});
+            button.addB(() -> cutsceneManager.moveCamera(new BlockPos(10,-55,3), 2));
+            button.addB(() -> cutsceneManager.exitCutscene((Player) event.getEntity()));
+            button.exec();
 
-            ps1.setEmote("story.npc.angry");
-
-
-
-
-            Executer screen = new Executer();
-            screen.addNullTaskS(1);
-            screen.addS(()-> Network.sendToPlayer(new SWakeUpPacket(), (Player) event.getEntity()), 1);
-            screen.addS(()->SeatEntity.create(event.getLevel(), new BlockPos(1,1,1), 0.4f, (Player) event.getEntity(), Direction.SOUTH), 3);
-            screen.exec();
         }
     }
 
     @SubscribeEvent
-    public static void ScriptStart(ScreenEvent.MouseButtonPressed.Post event){
-        if (event.getScreen() instanceof WakeUpScreen){
-            station.addNullTaskS(10);
-            station.addS(()->StoryFunction.ShowWaitScreenAll(event.getScreen().getMinecraft().player, 3),1);
-            station.addS(()->StoryFunction.TeleportEntityAll(event.getScreen().getMinecraft().player, new Vector3d(50, event.getScreen().getMinecraft().player.getY(), 50)), 1);
-            station.exec();
-        }
+    public static void Block(BlockEvent.BreakEvent event){
+        event.getLevel().playSound(event.getPlayer(), event.getPos(), SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 1,1);
+//        if (!event.getLevel().isClientSide()){
+//        Hero hero = new Hero(new NpcEntity(InitEntity.HOPRIK.get(), event.getPlayer().getLevel()));
+//        hero.setTime();
+////        hero.pickupOn();
+//        //hero.giveItem();
+//        hero.spawnEntity(event.getPlayer().getOnPos().above(2));
     }
 }

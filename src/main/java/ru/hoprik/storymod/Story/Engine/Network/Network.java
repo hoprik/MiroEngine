@@ -47,6 +47,12 @@ public class Network{
                 .consumerMainThread(SWaitScreenPacket::handle)
                 .add();
 
+        net.messageBuilder(SCutscene.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SCutscene::new)
+                .encoder(SCutscene::toBytes)
+                .consumerMainThread(SCutscene::handle)
+                .add();
+
         net.messageBuilder(SEndDialogPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(SEndDialogPacket::new)
                 .encoder(SEndDialogPacket::toBytes)
@@ -71,6 +77,13 @@ public class Network{
                 .encoder(SPlayerMessagePacket::toBytes)
                 .consumerMainThread(SPlayerMessagePacket::handle)
                 .add();
+
+        net.messageBuilder(SPlayerMessagePacketWithHeads.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SPlayerMessagePacketWithHeads::new)
+                .encoder(SPlayerMessagePacketWithHeads::toBytes)
+                .consumerMainThread(SPlayerMessagePacketWithHeads::handle)
+                .add();
+
 
         INSTANCE = net;
     }

@@ -1,10 +1,18 @@
 package ru.hoprik.storymod.Story.Engine;
 
+import com.mojang.brigadier.ParseResults;
 import com.mojang.math.Vector3d;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,8 +21,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import ru.hoprik.storymod.Story.Engine.Mixins.ChatComponentMixin2;
+import ru.hoprik.storymod.Story.Engine.MixinsInter.GuiMessageOwnerAccessor;
 import ru.hoprik.storymod.Story.Engine.Network.Network;
 import ru.hoprik.storymod.Story.Engine.Network.Packets.*;
+import ru.hoprik.storymod.Story.Engine.Utils.ChatHeads;
 import ru.hoprik.storymod.Story.Engine.Utils.SerializableRunnable;
 import ru.hoprik.storymod.StoryMod;
 
@@ -22,12 +33,53 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 public class StoryFunction implements Serializable{
+
+    public static void Message(Player playerAll, String hero, String text, ResourceLocation location){
+        if (!playerAll.level.isClientSide) {
+            for (Player player : playerAll.getServer().getPlayerList().getPlayers()) {
+
+                if (location != null) {
+                    ChatHeads.lastPlayerSkin = location;
+                }
+                else {
+                    ChatHeads.lastPlayerSkin = new ResourceLocation("storymod", "textures/entity/player.png");
+                }
+
+                MutableComponent message = Component.empty();
+                MutableComponent hero_comp = Component.literal("["+hero+"] ").withStyle(style -> style.withColor(Settings.colorChat));
+                MutableComponent text_comp = Component.literal(text).withStyle(style -> style.withColor(ChatFormatting.WHITE));
+
+                message.append(hero_comp);
+                message.append(text_comp);
+
+                player.sendSystemMessage(message);
+            }
+        }
+        else {
+            if (location != null) {
+                Network.sendToServer(new SPlayerMessagePacketWithHeads(hero, text, location));
+            }
+            else {
+                Network.sendToServer(new SPlayerMessagePacketWithHeads(hero, text, new ResourceLocation("storymod", "textures/entity/player.png")));
+            }
+
+        }
+    }
     public static void Message(Player playerAll, String hero, String text){
         if (!playerAll.level.isClientSide) {
             for (Player player : playerAll.getServer().getPlayerList().getPlayers()) {
-                player.sendSystemMessage(Component.literal(ChatFormatting.DARK_PURPLE + "[" + hero + "]" + ChatFormatting.RESET + " " + text));
+                //player.sendSystemMessage(Component.literal(ChatFormatting.DARK_PURPLE + "[" + hero + "]" + ChatFormatting.RESET + " " + text).withStyle(style -> style.withColor(16757663)));
+                MutableComponent message = Component.empty();
+                MutableComponent hero_comp = Component.literal("["+hero+"] ").withStyle(style -> style.withColor(Settings.colorChat).withFont(Settings.fontHero));
+                MutableComponent text_comp = Component.literal(text).withStyle(style -> style.withColor(ChatFormatting.WHITE).withFont(Settings.fontText));
+
+                message.append(hero_comp);
+                message.append(text_comp);
+
+                player.sendSystemMessage(message);
             }
         }
         else {
@@ -35,8 +87,15 @@ public class StoryFunction implements Serializable{
         }
     }
 
-    public static void MessageFromFirstPlayer(Player player, String hero, String text){
-        player.sendSystemMessage(Component.literal((ChatFormatting.DARK_GREEN +"["+hero+"]"+ChatFormatting.RESET+" "+text)));
+    public static void MessageFormOnePlayer(Player player, String hero, String text){
+        MutableComponent message = Component.empty();
+        MutableComponent hero_comp = Component.literal("["+hero+"] ").withStyle(style -> style.withColor(Settings.colorChat).withFont(Settings.fontHero));
+        MutableComponent text_comp = Component.literal(text).withStyle(style -> style.withColor(ChatFormatting.WHITE).withFont(Settings.fontText));
+
+        message.append(hero_comp);
+        message.append(text_comp);
+
+        player.sendSystemMessage(message);
     }
 
     public static void unlockRecipe(Player player, String nameCraft) {
@@ -77,6 +136,14 @@ public class StoryFunction implements Serializable{
         else {
             Network.sendToServer(new STeleportPlayer(vector3d));
         }
+    }
+
+    public static void openTrade(){
+
+    }
+
+    public static void executeCommand(Player player, String command) {
+        player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack(), "/" + command);
     }
 
 

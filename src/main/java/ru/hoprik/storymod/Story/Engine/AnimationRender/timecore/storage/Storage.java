@@ -1,0 +1,23 @@
+package ru.hoprik.storymod.Story.Engine.AnimationRender.Timecore.storage;
+
+import ru.hoprik.storymod.Story.Engine.AnimationRender.Timecore.storage.settings.ModSettings;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Storage for all mod settings, which will be used in TimeCore.
+ *///TODO rework
+public class Storage {
+    //TODO make synchronized?
+    private static final Map<String, ModSettings> ALL_SETTINGS = new HashMap<>();
+    private static final Map<String, Features> ALL_FEATURES = new HashMap<>();
+
+    public static ModSettings getSettings(String modId) {
+        return ALL_SETTINGS.computeIfAbsent(modId, ModSettings::new);
+    }
+
+    public static Features getFeatures(String modId) {
+        return ALL_FEATURES.computeIfAbsent(modId, Features::new);
+    }
+}
