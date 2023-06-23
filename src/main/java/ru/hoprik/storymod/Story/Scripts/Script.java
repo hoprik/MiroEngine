@@ -23,36 +23,42 @@ import ru.hoprik.storymod.StoryMod;
 
 @Mod.EventBusSubscriber(modid = StoryMod.MODID)
 public class Script {
-    static Executer station = new Executer();
-
-
+    static boolean cooldown = false;
+    static Player player;
+    static Dialog dialog = new Dialog("Привет я нечто то заспавнит моба. Хочешь?", new Bench[]{
+            new Bench("Да",
+                    new Dialog(1, (Serializable & Runnable) ()->{
+                        yes();
+                    })),
+            new Bench("Нет",
+                    new Dialog(2, (Serializable & Runnable) () -> {
+                        no();
+                    }))});
     @SubscribeEvent
-    public static void ScriptCall(EntityJoinLevelEvent event){
-        if (!event.getLevel().isClientSide && event.getEntity() instanceof Player){
-            Hero ps1 = new Hero(new NpcEntity(InitEntity.PASSAGER1.get(), event.getLevel()), new BlockPos(event.getEntity().getX()+2, event.getEntity().getY(), event.getEntity().getZ()+2));
-            Hero ps2 = new Hero(new NpcEntity(InitEntity.PASSAGER1.get(), event.getLevel()), new BlockPos(event.getEntity().getX()-2, event.getEntity().getY(), event.getEntity().getZ()+2));
-            Hero ps3 = new Hero(new NpcEntity(InitEntity.PASSAGER1.get(), event.getLevel()), new BlockPos(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ()+2));
-
-            ps1.setEmote("story.npc.angry");
-
-
-
-
-            Executer screen = new Executer();
-            screen.addNullTaskS(1);
-            screen.addS(()-> Network.sendToPlayer(new SWakeUpPacket(), (Player) event.getEntity()), 1);
-            screen.addS(()->SeatEntity.create(event.getLevel(), new BlockPos(1,1,1), 0.4f, (Player) event.getEntity(), Direction.SOUTH), 3);
-            screen.exec();
-        }
+    public static void Test(BlockEvent.BreakEvent event){
+        player = event.getPlayer();
+        dialog.show(event.getPlayer());
     }
 
+    public static void yes(){
+        Hero hero = new Hero(new NpcEntity(InitEntity.HOPRIK.get(), player.level), new BlockPos(0, -60, 0));
+        hero.moveEntity(new Vector3d(9,-60,9), 0.4F);
+    }
+
+    public static void no(){
+        Hero hero = new Hero(new NpcEntity(InitEntity.YBLEDOK.get(), player.level), new BlockPos(0, -60, 0));
+        hero.moveEntity(new Vector3d(9,-60,9), 0.4F);
+    }
     @SubscribeEvent
-    public static void ScriptStart(ScreenEvent.MouseButtonPressed.Post event){
-        if (event.getScreen() instanceof WakeUpScreen){
-            station.addNullTaskS(10);
-            station.addS(()->StoryFunction.ShowWaitScreenAll(event.getScreen().getMinecraft().player, 3),1);
-            station.addS(()->StoryFunction.TeleportEntityAll(event.getScreen().getMinecraft().player, new Vector3d(50, event.getScreen().getMinecraft().player.getY(), 50)), 1);
-            station.exec();
+    public static void interact(PlayerInteractEvent.EntityInteract event) {
+        if (event.getTarget() instanceof NpcEntity && !cooldown) {
+            cooldown = true;
+            Player player = event.getEntity();
+            StoryFunction.Message(player, "ZenHunT", "Я гей!");
+            Executer executer = new Executer();
+            executer.addS(() -> dialog.show(player), 2);
+            executer.addS(() -> cooldown = false, 2);
+            executer.exec();
         }
     }
 }
